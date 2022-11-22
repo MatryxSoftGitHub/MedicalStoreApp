@@ -1,0 +1,592 @@
+*{
+    padding: 0px;
+    margin: 0px;
+}
+
+body{
+    background-color:lightskyblue;
+    background-image: url('/assets/Medical_System.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+
+/* login page styles */
+.login_main {
+    margin: auto;
+    width: 50%;
+    /* border: 1px solid black; */
+    padding: 10px;
+    text-align: center;
+    padding-top: 5%;
+}
+
+.login-container {
+    margin: auto;
+    width: 50%;
+    /* border: 1px solid black; */
+    padding: 5px;
+    text-align: center;
+}
+
+.title>h2{
+    font-size: 70px;
+    text-align: center;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    -webkit-text-stroke: 1px white;
+    /* -webkit-text-stroke-width: medium; */
+    -webkit-text-stroke-width: 1.5pt;
+} 
+
+.title>h6{
+    font-size: 18px;
+    text-align: center;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+form{
+    padding: 0 3em;
+}
+
+.btn{
+    padding: .4em 2em;
+    border-radius: 15px;
+}
+
+/* logout alert message styles */
+.alert{
+    margin-top: 5%;
+}
+
+
+/* navigation menu list styles */
+.menu-bar{
+    text-align: center;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color:teal;
+    width:100%;
+    position: relative;
+}
+
+.nav_menu_link{
+    display: inline-flex;
+    list-style: none;
+    color: white;
+}
+
+.nav_menu_link>li{
+    width: 120px;
+    margin-top: 20px;
+    margin-left: 6px;
+    position: static;    
+}
+
+.nav_menu_link>li>a{
+    text-decoration: none;
+    color: white;
+}
+
+.nav_menu_link>li:hover{
+    background-color:darkseagreen;
+    border-radius: 3px;
+}
+
+.active, .nav_menu_link>li:hover{
+    background: darkseagreen;
+    border-radius: 3px;
+}
+
+/* logout list styles */
+.nav_logout_link{
+    display: inline-flex;
+    list-style: none;
+    color: white;
+    margin-left: 130px;
+}
+.nav_logout_link>li{
+    width: 100px;
+    margin-left: 100px;
+    position:static;
+}
+.nav_logout_link>li>a{
+    text-decoration: none;
+    color: white;
+}
+.nav_logout_link>li:hover{
+    background-color:darkseagreen;
+    border-radius: 3px;
+}
+.active, .nav_logout_link>li:hover{
+    background: darkseagreen;
+    border-radius: 3px;
+}
+
+/*navigation menu items images margin*/
+.menu-bar, .fas{
+    margin-right: 8px;
+}
+
+/*navigation sub menu items should not be displayed*/
+.sub-menu-bar{
+    display: none;
+} 
+
+/*navigation sub menu items styles*/
+.nav_menu_link>li:hover .sub-menu-bar{
+    display:block;
+    position: absolute;
+    background-color: teal;
+}
+
+.nav_menu_link>li:hover .sub-menu-bar>.nav_menu_link{
+    display: block;
+    margin: 8px;
+} 
+
+.nav_menu_link>li:hover .sub-menu-bar>.nav_menu_link>li{
+    width: 160px;
+    padding: 10px;
+    border-bottom: 1px dotted white;
+}  
+
+/*navigation sub menu of sub menu items should not be displayed*/
+
+.nav_sub_menu_link{
+    display: inline-flex;
+    list-style: none;
+    color: white;
+}
+
+.nav_sub_menu_link>li{
+    width: 120px;
+    margin-top: 5px; 
+    margin-left: 6x;
+    position: static;    
+}
+
+.nav_sub_menu_link>li>a{
+    text-decoration: none;
+    color: white;
+}
+
+.nav_sub_menu_link>li:hover{
+    background-color:darkseagreen;
+    border-radius: 3px;
+}
+
+.active, .nav_sub_menu_link>li:hover{
+    background: darkseagreen;
+    border-radius: 3px;
+}
+
+.sub-of-sub-menu-bar{
+    display: none;
+    margin-top: -30.6px;
+    margin-left: 80px;
+}
+
+/*navigation sub menu of sub menu items styles*/
+.sub-menu-bar>.nav_menu_link>li:hover .sub-of-sub-menu-bar{
+    display:inline-block;
+    position: absolute;
+    background-color: teal;
+}
+
+.sub-menu-bar>.nav_menu_link>li:hover .sub-of-sub-menu-bar>.nav_sub_menu_link{
+    display: inline-block;
+    margin: 8px;
+} 
+
+.sub-menu-bar>.nav_menu_link>li:hover .sub-of-sub-menu-bar>.nav_sub_menu_link>li{
+    width: 150px;
+    padding: 10px;
+    border-bottom: 1px dotted white;
+}
+
+/*application title css styles*/
+.container>h3{
+    padding-top: 1%;
+    font-size: 60px;
+    font-weight: bold;
+    text-align: center;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color:black;
+    -webkit-text-stroke: 1px white;
+     /* -webkit-text-stroke-width: medium; */ 
+    -webkit-text-stroke-width: 2pt;
+}
+
+
+/* new stock container css styles */
+.new-stock-container {
+    margin: auto;
+    width: 90%;
+    /* border: 1px solid black; */
+    padding: 10px;
+    /* text-align: center; */
+    background-color: aliceblue;
+}
+
+.new-stock-container>h4{
+    text-align: center;
+    padding-top: 0.5%;
+    padding-bottom: 1%;
+    font-weight:bold;
+}
+
+/* add stock container css styles */
+.add-stock-container {
+    margin-left:-3%;
+    width: 105%;
+    /* border: 1px solid black; */
+    padding: 0px;
+    text-align: left;
+}
+
+/* form add stock container css styles */
+.add-stock-container>.form-inline{
+    /* align-items: center; */
+    /* margin:0px; */
+    padding: 1%;
+    /* border: 1px solid black; */
+}
+
+.add-stock-container>.form-inline>.form-control{
+    width: 200px;
+    margin-left: 0px;
+    font-family:'Times New Roman', Times, serif;
+} 
+
+.add-stock-container>.form-inline>b{
+    display: inline-block;
+    margin-left: 12px;
+    width: 160px;
+}
+
+/* form btn css styles */
+.add-stock-container>.form-inline>.btn{
+    margin-left: 500px;
+    align-items: center;
+}
+
+.add-stock-container>.form-inline>#search{
+    margin-left: 100px;
+}
+
+/* sales stock container css styles */
+.sales-stock-container {
+    margin: auto;
+    width: 100%;
+    /* border: 1px solid black; */
+    padding: 1px;
+    text-align: left;
+    margin-left: 0.5%;
+}
+
+/* form sales stock container css styles */
+.sales-stock-container>.form-inline{
+    /* align-items: center; */
+    /* margin:2px; */
+    padding: 1%;
+    /* border: 1px solid black; */
+}
+
+.sales-stock-container>.form-inline>.form-control{
+    width: 200px;
+    margin-left: -25px;
+    font-family:'Times New Roman', Times, serif;
+} 
+
+.sales-stock-container>.form-inline>b{
+    padding-left: 10px;
+    display: inline-block;
+    width: 180px;
+}
+
+/* form btn css styles */
+.sales-stock-container>.form-inline>.btn{
+    margin-left: 460px;
+    align-items: center;
+}
+
+.sales-detail-container>#salesInvoice>.btn{
+    margin-left: 890px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+/**************** Table css styles ******************/
+/*Stock Details table checkboxes*/
+.stock-container>#checkboxes>label{
+    display: block;
+    float: left;
+    margin: 0 50px 20px;
+}
+.stock-container>#checkboxes>input{
+    display: block;
+    float: left;
+    margin: 7px -40px 20px;
+}
+
+.stock-container>#checkboxes>button{
+    display: block;
+    float: right;
+    margin: 0 -330px 0px;
+}
+
+/* Company details table */
+.company-container {
+    margin: auto;
+    width: 80%;
+    /* border: 1px solid black; */
+    padding: 10px;
+    text-align: center;
+    background-color:aliceblue;
+}
+
+/* This is for search input field */
+.company-container>.form-inline{
+    display: block;
+    float: right;
+    margin: 0 50px 20px;
+}
+
+.company-container>h4 {
+    /* border: 1px solid black; */
+    padding-top: 2px;
+    padding-bottom: 4px;
+    margin-left: 0px;
+}
+
+/* Stock details table */
+
+.stock-container>.form-inline{
+    display: block;
+    float: right;
+    margin: 0 50px 20px;
+}
+
+.stock-container>.form-inline>.btn{
+    background-color: lightskyblue;
+}
+
+
+.stock-container {
+    margin: auto;
+    width: 92%;
+    /* border: 1px solid black; */
+    padding-top: 10px;
+    text-align: center;
+    background-color:aliceblue;
+}
+
+.stock-container>h4 {
+    /* border: 1px solid black; */
+    padding-top: 2px;
+    padding-bottom: 4px;
+    margin-left: 0px;
+}
+
+/* Customer details table */
+.customer-container {
+    margin: auto;
+    width: 90%;
+    /* border: 1px solid black; */
+    padding: 10px;
+    text-align: center;
+    background-color:aliceblue;
+}
+
+/* This is for search input field */
+.customer-container>.form-inline{
+    display: block;
+    float: right;
+    margin: 0 50px 20px;
+}
+
+.customer-container>h4 {
+    /* border: 1px solid black; */
+    padding-top: 2px;
+    padding-bottom: 4px;
+    margin-left: 0px;
+}
+
+/* Sales details table */
+.sales-container {
+    margin: auto;
+    width: 90%;
+    /* border: 1px solid black; */
+    padding: 10px;
+    /* text-align: center; */
+    background-color: aliceblue;
+}
+
+.sales-container>h4 {
+    /* border: 1px solid black; */
+    padding-top: 2px;
+    padding-bottom: 4px;
+    text-align: center;
+}
+
+/* sales details search input and btn */
+.sales-stock-container>.form-inline>#searchItem{
+    display: block;
+    float: right;
+    margin: 0 10px 20px;
+    width: 26%;
+}
+
+.sales-stock-container>.form-inline>#btnSearch{
+    display: block;
+    float: right;
+    margin: 0 0px 20px;
+}
+
+/**************** Sell Table css styles ******************/
+
+#labelSellInvoice{
+    text-align: center;
+    padding-top: 4%;
+    margin-left: 1%;
+    font-weight:bold;
+}
+
+#sellDetailsTable {
+    margin: auto;
+    align-items: left;
+    width: 90%;
+    /* border: 1px solid black; */
+    padding: 1px;
+    text-align: left;
+    margin-left: 60px;
+    margin-top: 1.5%;
+}
+
+table {
+    border-collapse: collapse;
+    table-layout: auto;
+    border-spacing: 0px;
+    margin-left: -35px;
+    margin-right: auto;
+    width: 310px;
+}
+
+.thead{
+    background-color:darkkhaki;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table td, .table th{
+    padding: .75em;
+    height: 80px;
+    /* width: 200px; */
+    text-align: center;
+    vertical-align: middle;
+    font-family:'Times New Roman', Times, serif;
+    border: solid 1px #666;
+    width: 110px;
+    word-wrap: break-word;    
+}
+
+table#stockDetailsTable tr th:nth-child(11), table#stockDetailsTable tr td:nth-child(11){
+    display:none;
+}
+
+table#userDetailsTable tr th:nth-child(5), table#userDetailsTable tr td:nth-child(5){
+    display:none;
+}
+
+table#companyDetailsTable tr th:nth-child(6), table#companyDetailsTable tr td:nth-child(6){
+    display:none;
+}
+
+table#customerDetailsTable tr th:nth-child(5), table#customerDetailsTable tr td:nth-child(5){
+    display:none;
+}
+
+table#sellDetailsTable tr th:nth-child(2), table#sellDetailsTable tr td:nth-child(2){
+    display:none;
+}
+table#sellDetailsTable tr th:nth-child(9), table#sellDetailsTable tr td:nth-child(9){
+    display:none;
+}
+table#sellDetailsTable tr th:nth-child(10), table#sellDetailsTable tr td:nth-child(10){
+    display:none;
+}
+table#sellDetailsTable tr th:nth-child(11), table#sellDetailsTable tr td:nth-child(11){
+    display:none;
+}
+table#salesInvoiceDetailsTable tr th:nth-child(1), table#salesInvoiceDetailsTable tr td:nth-child(1){
+    display:none;
+}
+
+.tbody>tr:hover{
+    background-color: lightsalmon;
+}
+
+.tbody>tr>td>.btn{
+    font-size: small;
+}
+
+@media only screen and (max-width:1024px){
+    table,thead,tbody,th,td,tr{
+        display: block;
+    }
+
+    thead tr{
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr{
+        border: 1px solid;
+    }
+
+    td{
+        border: none;
+        /* border-bottom: 1px solid; */
+        position: relative;
+    }
+}
+
+
+/* password change container css styles */
+.password-change-container {
+    margin: auto;
+    width: 100%;
+    padding: 0px;
+    text-align: left;
+    margin-top: 3%;
+}
+
+/* form password change container css styles */
+.password-change-container>.form-inline{
+    align-items: center;
+    margin-left:24%;
+    padding: 1%;
+}
+
+.password-change-container>.form-inline>.form-control{
+    width: 200px;
+    margin-left: 0px;
+    font-family:'Times New Roman', Times, serif;
+} 
+
+.password-change-container>.form-inline>b{
+    display: inline-block;
+    margin-left: 12px;
+    width: 160px;
+}
+
+/* form btn css styles */
+.password-change-container>.form-inline>.btn{
+    margin-top: 1%;
+    margin-left: 25%;
+    align-items: center;
+}
+
+
+
+

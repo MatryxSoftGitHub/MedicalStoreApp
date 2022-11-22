@@ -1,0 +1,11 @@
+<% for(var i=0; i<salesInvoiceDetails.length; i++) { %>
+    <tr>
+        <td><%= salesInvoiceDetails[i]._id %></td>
+        <td><%= salesInvoiceDetails[i].cust_name %></td>
+        <td><%= salesInvoiceDetails[i].mob_number %></td>
+        <td><%= salesInvoiceDetails[i].ref_doctor %></td>
+        <td>
+            <a href='#' type='button' style="color:blue;cursor: pointer;" onclick="viewPdfFile(this)"><%= salesInvoiceDetails[i].file_name %></a> 
+        </td>
+    </tr>
+<% } %>

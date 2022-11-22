@@ -1,0 +1,32 @@
+<%- include('header') -%>
+<%- include('dashboard') -%>
+    <div class="top company-container">
+        <h4>Update Company</h4>
+        <form method="#" action="#">
+            <div class="company-detail-container">
+                <table class="table" id="companyUpdateTable">
+                    <thead class="thead">
+                        <tr>
+                            <th>Manufacturer Name</th>
+                            <th>Supplier Name</th>
+                            <th>Supplier Address</th>
+                            <th>Supplier Contact Person Name</th>
+                            <th>Supplier Mobile Number</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody">
+                        <%- include('showCompanyDetails') -%>
+                    </tbody>
+                </table>                
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="http://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+
+      $("#companyUpdateTable").dataTable();  
+
+    </script>
+<%- include('footer') -%>

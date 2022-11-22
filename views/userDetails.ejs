@@ -1,0 +1,30 @@
+<%- include('header') -%>
+<%- include('dashboard') -%>
+    <div class="top stock-container">       
+        <h4>User Details</h4>
+        <form method="#" action="#">
+            <div class="stock-detail-container">
+                <table class="table" id="userDetailsTable">
+                    <thead class="thead">
+                        <tr>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody">
+                        <%- include('showUserDetails') -%>
+                    </tbody>
+                </table>                
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="http://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+
+      $("#userDetailsTable").dataTable();       
+  </script>
+<%- include('footer') -%>

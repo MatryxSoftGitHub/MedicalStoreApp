@@ -1,0 +1,402 @@
+<!-- <div class="new-stock-container">
+    <h4>Add New Stock</h4>
+    <form method="POST" action="#">
+        <div class="add-stock-container">
+            <div class="form-inline">
+                <b for="item_name">Item Name:</b>
+                <input type="text" id="item_name" class="form-control">
+            </div>
+            <div class="form-inline">
+                <b for="item_detail">Item Detail:</b>
+                <input type="text" id="item_detail" class="form-control">
+            </div>
+            <div class="form-inline">
+                <b for="item_price">Item Price:</b>
+                <input type="text" id="item_price" class="form-control">
+            </div>
+            <div class="form-inline">
+                <b for="quantity">Quantity:</b>
+                <input type="text" id="quantity" class="form-control">
+            </div>
+            <div class="form-inline">
+                <b for="company_name">Company Name:</b>
+                <input type="text" id="company_name" class="form-control" list="exampleList">
+                <datalist id="exampleList">
+                    <option value="A">  
+                    <option value="B">
+                  </datalist>
+            </div>
+            <div class="form-inline">
+                <b for="location">Location:</b>
+                <input type="text" id="location" class="form-control">
+            </div>
+            <div class="form-inline">
+                <b for="expire_date">Expire Date:</b>
+                <input type="datetime-local" id="expire_date" class="form-control">
+            </div>
+            <div class="form-inline">
+                <button type="submit" class="btn btn-success rounded-pill">Add Stock</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<%- include('header') -%>
+<%- include('dashboard') -%>
+    <div class="top sales-container">
+        <h4>Sales Details</h4>
+        <form id="salesUpdate" method="POST" action="">
+            <div class="sales-detail-container">
+                <div class="add-stock-container">
+                    <div class="form-inline">
+                        <input type="text" id="searchItem" name="searchItem" class="form-control" size="100" spellcheck="false" autocomplete="off" placeholder="Search for Customer Mobile Number">
+                        <button type="submit" id="btnSearch" class="btn btn-success rounded-pill" onclick="myFunction()">Search</button>
+                    </div>
+                    <div class="form-inline">
+                        <b for="customer_name">Customer Name:</b>
+                        <input type="text" id="src_customer_name" name="src_customer_name" class="form-control" oninput="onCustInput()" list="getClient">
+                        <datalist id="getClient">
+                            <% for(var i=0; i<getClient.length; i++) { %>
+                                <option value="<%= getClient[i].client_name %>"><%= getClient[i].client_name %></option>
+                            <% } %>
+                        </datalist>
+                    <!-- </div>
+                    <div class="form-inline"> 
+                        <b for="medicine_name">Select Medicine for Sale:</b>
+                        <input type="text" id="medicine_name" name="medicine_name" class="form-control" oninput="onMedInput()" list="getMedicine">
+                        <datalist id="getMedicine">
+                            <% for(var i=0; i<getMedicine.length; i++) { %>
+                                <option id="<%= getMedicine[i]._id %>" value="<%= getMedicine[i].item_name %>"><%= getMedicine[i].item_name %></option>
+                                <%= medicinePrice=getMedicine[i].item_price; %>
+                                <%= medicineQuantity=getMedicine[i].quantity; %>
+                                <%= medicineExpDate=getMedicine[i].expire_date; %>
+                                <%= medicineID=getMedicine[i]._id; %>                               
+                            <% } %>
+                        </datalist>
+                    </div>
+                    <div class="form-inline">
+                        <b for="medicine_quantity">Medicine Quantity:</b>
+                        <input type="number" id="medicine_quantity" name="medicine_quantity" class="form-control" readonly>
+                        <b for="medicine_price">Medicine Price:</b>
+                        <input type="number" id="medicine_price" name="medicine_price" class="form-control" readonly>
+                    </div>
+                    <div class="form-inline">
+                        <b for="sell_quantity">Sell Quantity:</b>
+                        <input type="number" id="sell_quantity" name="sell_quantity" oninput="changeQty()" class="form-control">
+                        <b for="total_amount">Total Amount:</b>
+                        <input type="number" id="total_amount" name="total_amount" class="form-control" readonly>
+                    </div>
+                    <div class="form-inline">
+                        <button type="submit" class="btn btn-success rounded-pill" onclick="onClick()">Add Sales</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form method="POST" action="/route/api/medical/sales">
+            <div class="sales-detail-container">
+                <h4 id="labelSellInvoice" style="display:none;">Sell Invoice</h4>
+                <table class="table" id="sellDetailsTable" style="display:none;">
+                    <thead class="thead">
+                        <tr>
+                            <th style="display: none;">id</th>
+                            <th>Quantity</th>
+                            <th>Item Name</th>
+                            <th>Expiry Date</th>
+                            <th>MRP</th>
+                            <th>Total Amount</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody" id="sellID">
+                        <!-- Auto fill the table data                         
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        var stockResponseData;
+        var stockMedicineID;
+        var stockMedicineDetails = [];
+        var stockMedicineDetailsKey = [_id,item_name,item_detail,item_price,quantity,company_name,location,expire_date];
+        var outSellQty, inStockQty;
+        function onCustInput() {
+            var src = document.getElementById("src_customer_name").value;
+            var index = document.getElementById('src_customer_name').selectedIndex;
+            if(index == 0){
+		        document.getElementById('dst_customer_name').value = "";
+	        } else {
+                document.getElementById('dst_customer_name').value =src;
+	        }
+        };
+
+        function onMedInput() {
+            var val = document.getElementById("medicine_name").value;
+            var selectedOptionId = $('#getMedicine').find('option[value="' + val + '"]').attr('id');
+            var selectedMedId=selectedOptionId;
+            stockMedicineID=selectedMedId
+            alert(selectedMedId);  
+            
+            const myData = function(medicineDetails) {
+                inStockQty = medicineDetails.quantity;
+                jsonStringifyResult = JSON.stringify(medicineDetails);
+                //const unquotedJsonStringify = jsonStringifyResult.replace(/"([^"]+)":/g, '$1:');
+                //stockMedicineDetails.push(medicineDetails._id,medicineDetails.item_name,medicineDetails.item_detail,medicineDetails.item_price,medicineDetails.quantity,medicineDetails.company_name,medicineDetails.location,medicineDetails.expire_date);
+                //stockMedicineDetails.push(unquotedJsonStringify);
+                stockMedicineDetails.push(jsonStringifyResult);
+                alert(stockMedicineDetails);
+                //alert(stockMedicineDetails.length);
+                return stockMedicineDetails;
+            }
+
+            // axios.get(`http://localhost:3000/route/api/medical/stocks?id=${selectedMedId}`)
+            //     .then(response => {
+            //         const data = response.data;
+            //         return data
+            //     })
+            //     .then(myData)
+            //     .catch(err => {
+            //         console.log('Error: ', err);
+            //     })
+
+            axios.get(`http://localhost:3000/route/api/medical/stocks?id=${selectedMedId}`)
+                .then((response) => {
+                    const users = response.data;
+                    jsonStringifyResult = JSON.stringify(users);
+                    medicineDetails = JSON.parse(jsonStringifyResult);
+                    //alert(medicineDetails);
+                    //alert(medicineDetails._id);
+                    var medicineQty = medicineDetails.quantity;
+                    alert(medicineDetails.quantity);
+                    var medPrice = medicineDetails.unit_price.split(" ");
+                    alert(medicineDetails.unit_price);
+                    alert(medPrice[0]);  
+                    var index = document.getElementById('medicine_name').selectedIndex;
+                    if(index == 0 || val === ""){
+		                document.getElementById('medicine_quantity').value = "";
+                        document.getElementById('medicine_price').value = "";
+	                } else {
+		                document.getElementById('medicine_quantity').value = medicineQty;
+                        document.getElementById('medicine_price').value = medPrice[0];
+	                }                    
+                    return medicineDetails;
+                }).then(myData).catch((error) =>console.error(error));
+        };
+
+        function changeQty() {
+            var custName = document.getElementById("src_customer_name").value;
+            var mediName = document.getElementById("medicine_name").value;
+            var mediQty = document.getElementById("medicine_quantity").value;
+            var sellQty = document.getElementById("sell_quantity").value;
+            var mediPrice = document.getElementById('medicine_price').value;        
+            var totalAmt = ((sellQty)*(mediPrice));
+            if(totalAmt == 0){
+                document.getElementById('total_amount').value = "$$$$$$$$";
+	        } else {
+		        document.getElementById('total_amount').value = totalAmt;
+	        }
+            outSellQty = sellQty;
+        };
+
+        function onClick(){
+            document.getElementById("labelSellInvoice").style.display="block";
+            document.getElementById("sellDetailsTable").style.display="block";
+            var sellQty = document.getElementById("sell_quantity");
+            var medName = document.getElementById("medicine_name");
+            var medExpDate = '<%= medicineExpDate %>';
+            var medPrice = document.getElementById("medicine_price");
+            var medTotalAmt = document.getElementById("total_amount");           
+            var myHtmlContent = "<tr><td style='display: none;'>"+stockMedicineID+"</td><td>"+sellQty.value+"</td><td>"+medName.value+"</td><td>"+medExpDate+"</td><td>"+medPrice.value+"</td><td>"+medTotalAmt.value+"</td><td><a type='button' class='btn btn-success' onclick='deleteRow(this)'>Delete</a></td></tr>"
+            var tableRef = document.getElementById('sellDetailsTable').getElementsByTagName('tbody')[0];
+            var newRow = tableRef.insertRow(tableRef.rows.length);
+            newRow.innerHTML = myHtmlContent;
+            document.getElementById("src_customer_name").value = "";
+            document.getElementById("dst_customer_name").value = "";
+            document.getElementById("medicine_name").value = "";
+            document.getElementById("medicine_quantity").value = "";
+            document.getElementById("medicine_price").value = "";
+            document.getElementById("sell_quantity").value = "";
+            document.getElementById("total_amount").value = "";
+            alert(inStockQty);
+            alert(outSellQty);
+            var replaceReducedQty = (parseInt(inStockQty))-(parseInt(outSellQty));
+            alert(replaceReducedQty);
+            alert(stockMedicineDetails);
+            reduceStockMedDetails = JSON.parse(stockMedicineDetails);
+            reduceStockMedDetails.quantity = replaceReducedQty;
+            alert(JSON.stringify(reduceStockMedDetails));
+            alert(stockMedicineID); 
+            const thisForm = document.getElementById('salesUpdate');
+            thisForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const formData = new FormData(sellMedicineDetails).entries();
+                alert("data:",formData);
+                const response = await fetch(`/route/api/medical/stocks?id=${stockMedicineID}/updateAfterSell?_method=PUT`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(Object.fromEntries(reduceStockMedDetails))
+                });
+                const result = await response.json();
+                console.log(result)
+            }); 
+            stockMedicineDetails=[];        
+        };
+
+        function deleteRow(btn) {
+            document
+                .querySelector('tbody')
+                .addEventListener('click', ({ target }) => {
+                    var deleteStockDetails=[]
+                    var row = btn.parentNode.parentNode;
+                    var deleteMedicineId = row.cells[0].innerText;
+                    //alert(row.cells[0].innerText);
+                    alert(deleteMedicineId);
+                    var deleteMedicineQty = row.cells[1].innerText;
+                    //alert(row.cells[1].innerText);
+                    alert(deleteMedicineQty);
+                    
+
+                    const myData = function(medicineDetails) {
+                        inStockQty = medicineDetails.quantity;
+                        jsonStringifyResult = JSON.stringify(medicineDetails);
+                        //const unquotedJsonStringify = jsonStringifyResult.replace(/"([^"]+)":/g, '$1:');
+                        //stockMedicineDetails.push(unquotedJsonStringify);
+                        deleteStockDetails.push(jsonStringifyResult);
+                        alert(deleteStockDetails);
+                        increaseStockMedDetails = JSON.parse(deleteStockDetails);
+                        increaseStockMedDetails.quantity = replaceIncreasedQty;
+                        alert(JSON.stringify(increaseStockMedDetails));
+                        //alert(inStockQty);
+                        //alert(stockMedicineDetails.length);
+                        return deleteStockDetails;
+                    }       
+                    
+                    // axios.get(`http://localhost:3000/route/api/medical/stocks?id=${selectedMedId}`)
+                    //     .then(response => {
+                    //         const data = response.data;
+                    //         return data
+                    //     })
+                    //     .then(myData)
+                    //     .catch(err => {
+                    //         console.log('Error: ', err);
+                    //     })
+                    
+
+                    axios.get(`http://localhost:3000/route/api/medical/stocks?id=${deleteMedicineId}`)
+                        .then((response) => {
+                        const users = response.data;
+                        jsonStringifyResult = JSON.stringify(users);
+                        medicineDetails = JSON.parse(jsonStringifyResult);                 
+                        return medicineDetails;
+                    }).then(myData).catch((error) =>console.error(error));
+
+                    alert(inStockQty);
+                    var replaceIncreasedQty = (parseInt(inStockQty))+(parseInt(deleteMedicineQty));
+                    alert(replaceIncreasedQty); 
+                    const thisForm = document.getElementById('salesUpdate');
+                    thisForm.addEventListener('submit', async function (e) {
+                        e.preventDefault();
+                        const formData = new FormData(sellMedicineDetails).entries();
+                        alert("data:",formData);
+                        const response = await fetch(`/route/api/medical/stocks?id=${stockMedicineID}/updateAfterSell?_method=PUT`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(Object.fromEntries(reduceStockMedDetails))
+                        });
+                        const result = await response.json();
+                        console.log(result)
+                    });  
+                    row.parentNode.removeChild(row);              
+                });
+        };      
+
+    </script>
+<%- include('footer') -%>
+<div class="form-inline">                        
+    <b for="medicine_name">Medicine Name:</b>
+    <input type="text" id="medicine_name" name="medicine_name" class="form-control" oninput="onMedInput()" list="getMedicine">
+    <datalist id="getMedicine">
+        <% for(var i=0; i<getMedicine.length; i++) { %>
+            <option id="<%= getMedicine[i]._id %>"><%= getMedicine[i].item_name %></option>                               
+        <% } %>
+    </datalist>
+    <b for="total_quantity">Total Quantity:</b>
+    <input type="number" id="total_quantity" name="total_quantity" class="form-control" readonly>
+    <b for="unit_price">Unit Price:</b>
+    <input type="number" id="unit_price" name="unit_price" class="form-control" readonly>
+</div>
+<div class="form-inline">
+    <b for="sell_quantity">Sell Quantity:</b>
+    <input type="number" id="sell_quantity" name="sell_quantity" oninput="changeQty()" class="form-control">
+    <b for="total_amount">Total Amount:</b>
+    <input type="number" id="total_amount" name="total_amount" class="form-control" readonly>
+</div>
+
+
+function onClick(){            
+    document.getElementById("sellDetailsTable").style.display="block";         
+    myHtmlContent = "<tr><td><a  type='button' class='btn btn-success' onclick='addRow()'>+</a></td><td><input type='text' id='medicine_name' name='medicine_name' class='form-control' oninput='onMedInput()' list='getMedicine'><datalist id='getMedicine'><% for(var i=0; i<getMedicine.length; i++) { %><option id='<%= getMedicine[i]._id %>' value='<%= getMedicine[i].item_name %>'><%= getMedicine[i].item_name %></option><% } %></datalist></td><td><input type='number' id='total_quantity' name='total_quantity' class='form-control' readonly></td><td><input type='number' id='unit_price' name='unit_price' class='form-control' readonly></td><td><input type='number' id='sell_quantity' name='sell_quantity' oninput='changeQty()' class='form-control'></td><td><input type='number' id='total_amount' name='total_amount' class='form-control' readonly></td><td><a type='button' class='btn btn-success' onclick='deleteRow(this)'>Delete</a></td></tr>"
+    var tableRef = document.getElementById('sellDetailsTable').getElementsByTagName('tbody')[0];
+    var newRow = tableRef.insertRow(tableRef.rows.length);
+    newRow.innerHTML = myHtmlContent;
+}
+
+function addRow() {
+    //var myHtmlContent = "<tr><td><a  type='button' class='btn btn-success' onclick='addRow()'>+</a></td><td><input type='text' id='medicine_name' name='medicine_name' class='form-control' oninput='onMedInput()' list='getMedicine'><datalist id='getMedicine'><% for(var i=0; i<getMedicine.length; i++) { %><option id='<%= getMedicine[i]._id %>' value='<%= getMedicine[i].item_name %>'><%= getMedicine[i].item_name %></option><% } %></datalist></td><td><input type='number' id='total_quantity' name='total_quantity' class='form-control' readonly></td><td><input type='number' id='unit_price' name='unit_price' class='form-control' readonly></td><td><input type='number' id='sell_quantity' name='sell_quantity' oninput='changeQty()' class='form-control'></td><td><input type='number' id='total_amount' name='total_amount' class='form-control' readonly></td><td><a type='button' class='btn btn-success' onclick='deleteRow(this)'>Delete</a></td></tr>"
+    var tableRef = document.getElementById('sellDetailsTable').getElementsByTagName('tbody')[0];
+    var newRow = tableRef.insertRow(tableRef.rows.length);
+    newRow.innerHTML = myHtmlContent;         
+}
+
+function onMedInput() {
+    medicineName = document.getElementById("medicine_name").value;
+    alert(medicineName)
+    selectedMedOptionId = $('#getMedicine').find('option[value="' + medicineName + '"]').attr('id');
+    alert(selectedMedOptionId)
+    var allMedicines = <%- JSON.stringify(getMedicine) %>;
+    for(let i=0;i<allMedicines.length;i++){
+        if(allMedicines[i]._id==selectedMedOptionId){
+            alert('Matched')
+            document.getElementById("total_quantity").value = allMedicines[i].quantity
+            alert(allMedicines[i].quantity)
+            var unitPrice = (allMedicines[i].unit_price).split(" ")
+            alert(unitPrice)
+            document.getElementById("unit_price").value=unitPrice[0]
+            alert(unitPrice[0])
+            break
+        }
+    }            
+}
+
+function changeQty() {
+    var mediQty = document.getElementById("total_quantity").value;
+    var sellQty = document.getElementById("sell_quantity").value;
+    var mediPrice = document.getElementById('unit_price').value;        
+    var totalAmt = ((sellQty)*(mediPrice));
+    if(totalAmt == 0){
+        document.getElementById('total_amount').value = "$$$$$$$$";
+    } else {
+        document.getElementById('total_amount').value = totalAmt;
+    }
+    outSellQty = sellQty;
+}
+
+
+<!-- axios.get(`http://localhost:3000/route/api/medical/stocks?id=${medId}`)
+                    .then((response) => {
+                        const users = response.data;
+                        jsonStringifyResult = JSON.stringify(users);
+                        medicineDetails = JSON.parse(jsonStringifyResult);
+                        alert(medicineDetails)
+                    }
+
+
+                    alert(salesMedicineIds[j])
+                var medId=salesMedicineIds[j]
+                var totalStockQty = document.getElementById(`total_quantity${j}`).value
+                alert(totalStockQty)
+                var sellQty = document.getElementById(`sell_quantity${j}`).value
+                alert(sellQty) --> 

@@ -1,0 +1,54 @@
+<%- include('header') -%>
+<%- include('dashboard') -%>
+    <div class="top customer-container">
+        <div class="form-inline">
+            <input type="text" id="searchItem" name="searchItem" class="form-control" onkeyup="myFunction()"spellcheck="false" size="30" autocomplete="off" placeholder="Search for Customer Name/Reference Doctor">
+            <!-- <button type="submit" class="btn rounded-pill" onclick="myFunction()">Search</button> -->
+        </div>
+        <h4>Existing Customer Details</h4>
+        <form method="#" action="#">
+            <div class="customer-detail-container">
+                <table class="table" id="existingCustomerDetailsTable">
+                    <thead class="thead">
+                      <tr>
+                        <th>Customer Name</th>
+                        <th>Customer Type</th>  
+                        <th>Mobile Number</th>
+                        <th>Doctor Name</th>               
+                      </tr>
+                    </thead>
+                    <tbody class="tbody">
+                        <%- include('showExistingCustomerDetails') -%>
+                    </tbody>
+                </table>                
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="http://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+
+      $("#existingCustomerDetailsTable").dataTable();  
+
+        function myFunction() {
+          var input, filter, table, tr, td, td1, i, txtValue, txtValue1;
+          input = document.getElementById("searchItem");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("existingCustomerDetailsTable");
+          tr = table.getElementsByTagName("tr");
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            td1 = tr[i].getElementsByTagName("td")[2];
+            if (td) {
+              txtValue = td.textContent || td.innerText;
+              txtValue1 = td1.textContent || td1.innerText;
+              if ((txtValue.toUpperCase().indexOf(filter) > -1) || (txtValue1.toUpperCase().indexOf(filter) > -1)) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }       
+          }
+        }
+    </script>
+<%- include('footer') -%>

@@ -1,0 +1,10 @@
+<% for(var i=0; i<customerDetails.length; i++) { %>
+    <% if(customerDetails[i].customer_type.toUpperCase()=='EXISTING') { %>
+        <tr>
+            <td><a href="#"><%= customerDetails[i].customer_name %></a></td>
+            <td><%= customerDetails[i].customer_type %></td>
+            <td><%= customerDetails[i].customer_mobile_number %></td>
+            <td><%= customerDetails[i].reference_doctor %></td>            
+        </tr>
+    <% } %>
+<% } %>

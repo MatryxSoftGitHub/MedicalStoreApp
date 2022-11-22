@@ -1,0 +1,348 @@
+<%- include('header') -%>
+<%- include('dashboard') -%>
+    <div class="top sales-container">
+        <h4>Add New Sale</h4>
+        <form id="salesUpdate" method="POST" action="" enctype="multipart/form-data">
+            <div class="sales-detail-container">
+                <div class="sales-stock-container">
+                    <div class="form-inline">
+                        <input type="text" id="searchItem" name="searchItem" class="form-control" size="100" spellcheck="false" autocomplete="off" placeholder="Search for Customer Mobile Number">
+                        <button type="button" id="btnSearch" class="btn btn-success rounded-pill" onclick="myFunction()">Search</button>
+                    </div>
+                    <div class="form-inline">
+                        <b for="customer_name">Customer Name:</b>
+                        <input type="text" id="customer_name" name="customer_name" class="form-control">
+                        <b for="cust_mobile_num">Mobile Number:</b>
+                        <input type="number" id="cust_mobile_num" name="cust_mobile_num" class="form-control">
+                        <b for="ref_doctor_name">Ref. Doctor Name:</b>
+                        <input type="text" id="ref_doctor_name" name="ref_doctor_name" class="form-control">
+                    </div>
+                    <div class="form-inline">
+                        <button type="button" class="btn btn-success rounded-pill" onclick="onClick()">Add Medicine</button>
+                    </div>
+                </div>
+                <table class="table" id="sellDetailsTable" style="display:none;">
+                    <thead class="thead" id="tableHead">
+                        <tr>
+                            <th></th>
+                            <th>Medicine ID</th>
+                            <th>Medicine Name</th>
+                            <th>HSN Number</th>
+                            <th>Batch Number</th>
+                            <th>Total Qty</th>
+                            <th>Sell Qty</th>
+                            <th>Unit Price</th>
+                            <th>CGST%</th>
+                            <th>SGST%</th>                            
+                            <th>Taxable</th>
+                            <th>Total Amount</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody" id="sellID">
+                        <!-- Auto fill the table data                         -->
+                    </tbody>
+                </table>
+                <div class="form-inline" id="salesInvoice" style="display:none;">
+                    <button type="button" id="btnSalesInvoice" class="btn btn-success rounded-pill" onclick="onSalesInvoice()">Sales Invoice</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html-to-pdfmake/browser.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/pdfmake@latest/build/pdfmake.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/pdfmake@latest/build/vfs_fonts.min.js'></script>
+    <script type="text/javascript">
+        let customerId,custMobNumber,customerName,refDoctorName,medicineRowCount=0,tableRowNumber,deleteRowNumber,tableRowCount=0
+        var salesTableDetails=[], tableHeaderNames, salesTableRowDetails="", invoiceDetails=[]
+
+        function myFunction(){
+            custMobNumber = document.getElementById("searchItem").value;
+            var allCustomers = <%- JSON.stringify(getCustomer) %>;
+            for(let i=0;i<allCustomers.length;i++){
+                if(allCustomers[i].customer_mobile_number==custMobNumber){
+                    let custType = allCustomers[i].customer_type
+                    if(allCustomers[i].customer_type.toUpperCase()=='EXISTING'){
+                        customerId = allCustomers[i]._id
+                        customerName = allCustomers[i].customer_name
+                        refDoctorName = allCustomers[i].reference_doctor
+                        document.getElementById("customer_name").value=customerName
+                        document.getElementById("cust_mobile_num").value=custMobNumber
+                        document.getElementById("ref_doctor_name").value=refDoctorName
+                        document.getElementById("customer_name").readOnly = true;
+                        document.getElementById("cust_mobile_num").readOnly = true;
+                        document.getElementById("ref_doctor_name").readOnly = true;
+
+                        axios.get(`http://localhost:3000/route/api/medical/invoices`).then(response=>{
+                            const users = response.data;
+                            //alert(users)
+                            //alert(typeof users)
+                            //alert(users.length)
+                            for(let i=0;i<users.length;i++){
+                                if(users[i].mob_number==custMobNumber){
+                                    //alert(users[i].mob_number)
+                                    invoiceDetails.push(users[i])
+                                }                                
+                            }
+                            //alert(invoiceDetails)
+                            for(let j=0;j<invoiceDetails.length;j++){
+                                alert(invoiceDetails[j].file_name)
+                                // if(invoiceDetails[j].mob_number==custMobNumber){
+                                //     alert(users[i].mob_number)
+                                //     invoiceDetails.push(users[i])
+                                // }                                
+                            }
+                        })
+                        break
+                    }
+                }else{
+                    document.getElementById("customer_name").value=''
+                    document.getElementById("cust_mobile_num").value=custMobNumber
+                    document.getElementById("ref_doctor_name").value=''
+                }
+            }
+            document.getElementById("searchItem").value=""
+        }
+
+        function onClick(){
+            document.getElementById("sellDetailsTable").style.display="block";
+            document.getElementById("salesInvoice").style.display="block"
+            addMedicinesRow()
+        }
+
+        function addMedicinesRow(){
+            if(tableRowCount==0){
+                medicineRowCount=0
+            }
+            if(tableRowCount<1){
+                medicineRowCount++
+                tableRowCount++
+                var myHtmlContent = `<tr><td><a  type='button' id='btnRowAdd${medicineRowCount-1}' class='btn btn-success' onclick='addRow(this)'>+</a></td><td><input type='text' id='medicine_id${medicineRowCount-1}' name='medicine_id${medicineRowCount-1}' class='form-control' readonly></td><td><input type='text' id='medicine_name${medicineRowCount-1}' name='medicine_name${medicineRowCount-1}' class='form-control' oninput='onMedInput(this)' list='getMedicine'><datalist id='getMedicine'><% for(var i=0; i<getMedicine.length; i++) { %><option id='<%= getMedicine[i]._id %>' value='<%= getMedicine[i].item_name %>'><%= getMedicine[i].item_name %></option><% } %></datalist></td><td><input type='number' id='hsn_code${medicineRowCount-1}' name='hsn_code${medicineRowCount-1}' class='form-control' readonly></td><td><input type='text' id='batch_number${medicineRowCount-1}' name='batch_number${medicineRowCount-1}' class='form-control' readonly></td><td><input type='number' id='total_quantity${medicineRowCount-1}' name='total_quantity${medicineRowCount-1}' class='form-control' readonly></td><td><input type='number' id='sell_quantity${medicineRowCount-1}' name='sell_quantity${medicineRowCount-1}' oninput='changeQty(this)' class='form-control'></td><td><input type='number' id='unit_price${medicineRowCount-1}' name='unit_price${medicineRowCount-1}' class='form-control' readonly></td><td><input type='number' id='cgst${medicineRowCount-1}' name='cgst${medicineRowCount-1}' class='form-control' readonly></td><td><input type='number' id='sgst${medicineRowCount-1}' name='sgst${medicineRowCount-1}' class='form-control' readonly></td><td><input type='number' id='taxable${medicineRowCount-1}' name='taxable${medicineRowCount-1}' class='form-control' readonly></td><td><input type='number' id='total_amount${medicineRowCount-1}' name='total_amount${medicineRowCount-1}' class='form-control' readonly></td><td><a type='button' id='btnDeleteRow${medicineRowCount-1}' class='btn btn-success' onclick='deleteRow(this)'>Delete</a></td></tr>`
+                var tableRef = document.getElementById('sellDetailsTable').getElementsByTagName('tbody')[0];
+                var newRow = tableRef.insertRow(tableRef.rows.length);
+                newRow.innerHTML = myHtmlContent;
+            }
+        }
+
+        function addRow(){
+            medicineRowCount++
+            tableRowCount++
+            var myHtmlContent = `<tr><td><a  type='button' id='btnRowAdd${medicineRowCount-1}' class='btn btn-success' onclick='addRow(this)'>+</a></td><td><input type='text' id='medicine_id${medicineRowCount-1}' name='medicine_id${medicineRowCount-1}' class='form-control' readonly></td><td><input type='text' id='medicine_name${medicineRowCount-1}' name='medicine_name${medicineRowCount-1}' class='form-control' oninput='onMedInput(this)' list='getMedicine'><datalist id='getMedicine'><% for(var i=0; i<getMedicine.length; i++) { %><option id='<%= getMedicine[i]._id %>' value='<%= getMedicine[i].item_name %>'><%= getMedicine[i].item_name %></option><% } %></datalist></td><td><input type='number' id='hsn_code${medicineRowCount-1}' name='hsn_code${medicineRowCount-1}' class='form-control' readonly></td><td><input type='text' id='batch_number${medicineRowCount-1}' name='batch_number${medicineRowCount-1}' class='form-control' readonly></td><td><input type='number' id='total_quantity${medicineRowCount-1}' name='total_quantity${medicineRowCount-1}' class='form-control' readonly></td><td><input type='number' id='sell_quantity${medicineRowCount-1}' name='sell_quantity${medicineRowCount-1}' oninput='changeQty(this)' class='form-control'></td><td><input type='number' id='unit_price${medicineRowCount-1}' name='unit_price${medicineRowCount-1}' class='form-control' readonly></td><td><input type='number' id='cgst${medicineRowCount-1}' name='cgst${medicineRowCount-1}' class='form-control' readonly></td><td><input type='number' id='sgst${medicineRowCount-1}' name='sgst${medicineRowCount-1}' class='form-control' readonly></td><td><input type='number' id='taxable${medicineRowCount-1}' name='taxable${medicineRowCount-1}' class='form-control' readonly></td><td><input type='number' id='total_amount${medicineRowCount-1}' name='total_amount${medicineRowCount-1}' class='form-control' readonly></td><td><a type='button' id='btnDeleteRow${medicineRowCount-1}' class='btn btn-success' onclick='deleteRow(this)'>Delete</a></td></tr>`
+            var tableRef = document.getElementById('sellDetailsTable').getElementsByTagName('tbody')[0];
+            var newRow = tableRef.insertRow(tableRef.rows.length);
+            newRow.innerHTML = myHtmlContent;
+        }
+
+        function onMedInput(medElement) {
+            tableRowNumber=''
+            var medRowIdValue = medElement.getAttribute("id")
+            var medicineName = document.getElementById(`${medRowIdValue}`).value
+            var selectedMedOptionId = $('#getMedicine').find('option[value="' + medicineName + '"]').attr('id');
+            var allMedicines = <%- JSON.stringify(getMedicine) %>;
+            for(let i=0;i<allMedicines.length;i++){
+                if(allMedicines[i]._id==selectedMedOptionId){
+                    tableRowNumber = medRowIdValue.charAt(medRowIdValue.length-1)
+                    document.getElementById(`medicine_id${tableRowNumber}`).value = allMedicines[i]._id
+                    document.getElementById(`hsn_code${tableRowNumber}`).value = allMedicines[i].hsn_code
+                    document.getElementById(`batch_number${tableRowNumber}`).value = allMedicines[i].batch_number
+                    document.getElementById(`cgst${tableRowNumber}`).value = allMedicines[i].cgst
+                    document.getElementById(`sgst${tableRowNumber}`).value = allMedicines[i].sgst
+                    document.getElementById(`total_quantity${tableRowNumber}`).value = allMedicines[i].quantity
+                    document.getElementById(`unit_price${tableRowNumber}`).value=allMedicines[i].unit_price
+                    break
+                }
+            }
+        }
+
+        function changeQty() {
+            var sellQty = document.getElementById(`sell_quantity${tableRowNumber}`).value;
+            var mediPrice = document.getElementById(`unit_price${tableRowNumber}`).value;
+            var cgst = document.getElementById(`cgst${tableRowNumber}`).value;
+            var sgst = document.getElementById(`sgst${tableRowNumber}`).value;
+            var sumOfCgstAndSgst = (Number(cgst)+Number(sgst))
+            var totalAmt = (Number(sellQty)*Number(mediPrice));
+            var taxableAmount = Number(totalAmt) - ((Number(totalAmt)*Number(sumOfCgstAndSgst))/(100+Number(sumOfCgstAndSgst)))
+            if(totalAmt == 0){
+                document.getElementById(`total_amount${tableRowNumber}`).value = "$$$$$$$$";
+            } else {
+                document.getElementById(`taxable${tableRowNumber}`).value = taxableAmount;
+		        document.getElementById(`total_amount${tableRowNumber}`).value = totalAmt;
+	        }
+
+        }
+
+        function deleteRow(btn) {
+            tableRowCount--
+            deleteRowNumber=''
+            // var medRowIdValue = btn.getAttribute("id")
+            // deleteRowNumber = medRowIdValue.charAt(medRowIdValue.length-1)
+            var row = btn.parentNode.parentNode;
+            // var deleteMedicineId = row.cells[2].children[0].value;
+            // var deleteMedicineQty = row.cells[3].children[0].value;
+            row.parentNode.removeChild(row);
+        }
+
+
+        function onSalesInvoice(){
+            var tableBody = document.getElementById("sellID");
+            var salesMedicineIds = [], tableBodyRowNumbers = []
+            var promises = []
+            var totalStockQty,perMedSellQty
+            for(var i = 0, row; row = tableBody.rows[i]; i++){
+                var medRowIdValue = row.cells[1].children[0].getAttribute("id")
+                var tBodyRowNumber = medRowIdValue.charAt(medRowIdValue.length-1)
+                var medId = row.cells[1].children[0].value
+                var totalStockQty = document.getElementById(`total_quantity${tBodyRowNumber}`).value
+                var perMedSellQty = document.getElementById(`sell_quantity${tBodyRowNumber}`).value
+                salesMedicineIds.push({'id':medId,'totalStockQty':totalStockQty,'perMedSellQty':perMedSellQty})
+            }
+            $.each(salesMedicineIds, function(index, medicine) {
+                axios.get(`http://localhost:3000/route/api/medical/stocks?id=${medicine.id}`).then(response=>{
+                    const users = response.data;
+                    jsonStringifyResult = JSON.stringify(users);
+                    var replaceReducedQty = (Number(medicine.totalStockQty))-(Number(medicine.perMedSellQty));
+                    medicineDetails = JSON.parse(jsonStringifyResult);
+                    medicineDetails.quantity = replaceReducedQty;
+                    var jsonStringifyModifiedResult = JSON.stringify(medicineDetails);
+                    updateStocks(medicine.id)
+                    async function updateStocks(id) {
+                        const response = await fetch(`/route/api/medical/stocks/${id}/update`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: jsonStringifyModifiedResult, // string or object
+                        }).then((response) => response.json())
+                                .then((data) => {
+                                    console.log('Success:', data);
+                                })
+                                .catch((error) => {
+                                    console.error('Error:', error);
+                                });
+                        const myJson = await response.json(); //extract JSON from the http response
+                    }
+                })
+            });
+            var myTableHeader = document.getElementById("tableHead")
+            var myTableBody = document.getElementById("sellID")
+            for (let i = 0; i < myTableHeader.rows.length; i++) {
+                salsTableRowDetails = ""
+                // GET THE CELLS COLLECTION OF THE CURRENT ROW.
+                var objCells = myTableHeader.rows.item(i).cells;
+
+                // LOOP THROUGH EACH CELL OF THE CURENT ROW TO READ CELL VALUES.
+                for (var j = 0; j < objCells.length; j++) {
+                    if(objCells.item(j).innerHTML==''|| objCells.item(j).innerHTML=='Total Qty'){
+                        // alert("Do nothing")
+                        //Do nothing
+                    }else{
+                        salesTableRowDetails += objCells.item(j).innerHTML+',';
+                    }
+                }
+                tableHeaderNames = salesTableRowDetails.split(',')
+                salesTableDetails.push(salesTableRowDetails)
+            }
+            for (let j = 0; j < myTableBody.rows.length; j++) {
+                salesTableRowDetails = ""
+                salesTableRowDetails=document.getElementById(`medicine_name${j}`).value+','
+                salesTableRowDetails+=document.getElementById(`hsn_code${j}`).value+','
+                salesTableRowDetails+=document.getElementById(`batch_number${j}`).value+','
+                salesTableRowDetails+=document.getElementById(`sell_quantity${j}`).value+','
+                salesTableRowDetails+=document.getElementById(`unit_price${j}`).value+','
+                salesTableRowDetails+=document.getElementById(`cgst${j}`).value+','
+                salesTableRowDetails+=document.getElementById(`sgst${j}`).value+','
+                salesTableRowDetails+=document.getElementById(`taxable${j}`).value+','
+                salesTableRowDetails+=document.getElementById(`total_amount${j}`).value+','
+                salesTableDetails.push(salesTableRowDetails)
+            }
+            // CREATE A WINDOW OBJECT.
+            var win = window.open('', '', 'height=700,width=700');
+            win.document.write('<html><head>');
+            win.document.write('<title>Invoice</title>');   // <title> FOR PDF HEADER.
+            //win.document.write(style);          // ADD STYLE INSIDE THE HEAD TAG.
+            win.document.write('</head>');
+            win.document.write('<body>');            
+            win.document.write(`<h6 id="invoice" style="text-align:center;">Invoice</h6>`);
+            win.document.write(`<label id="invoice_custname" style="text-align:left;">Customer Name:${customerName}</label><label id="invoice_refdoctor" style="text-align:right;">Reference Doctor:${refDoctorName}</label>`);
+            win.document.write(`<label id="invoice_mobnum" style="text-align:left;">Mobile Number:${custMobNumber}</label><br/>`); 
+            win.document.write('<table>');         
+            for(let n=0;n<myTableHeader.rows.length;n++){
+                win.document.write('<tr>'); 
+                for(let k=1;k<tableHeaderNames.length-1;k++){
+                    win.document.write(`<th style="background-color:darkkhaki;">${tableHeaderNames[k]}</td>`);                    
+                    //win.document.write(tableHeaderNames[k]+' ');
+                }
+                win.document.write('</tr>');
+            } 
+            var totalBillAmount=0,colCount=0
+            for(let l=1;l<salesTableDetails.length;l++){
+                var tableRowValues=""
+                tableRowValues = salesTableDetails[l].split(',')
+                colCount=tableRowValues.length
+                win.document.write('<tbody>');
+                win.document.write('<tr>');
+                for(let m=0;m<tableRowValues.length-1;m++){
+                    if(m==tableRowValues.length-2){
+                        win.document.write(`<td>${Number(tableRowValues[m]).toFixed(2)}</td>`);
+                        totalBillAmount+=Number(tableRowValues[m])
+                    }else if(m==tableRowValues.length-3){
+                        win.document.write(`<td>${Number(tableRowValues[m]).toFixed(2)}</td>`);
+                    }else{
+                        win.document.write(`<td>${tableRowValues[m]}</td>`); 
+                    }                                       
+                    //win.document.write(tableRowValues[m]+' ');
+                }
+                win.document.write('</tr>');
+            }
+            win.document.write('<tr>');
+            for(let n=0;n<colCount-1;n++){ 
+                if(n==colCount-2){
+                    win.document.write(`<td>${totalBillAmount.toFixed(2)}</td>`);
+                } 
+                else if(n==colCount-3){
+                    win.document.write('<td>Total :</td>');
+                }else{
+                    win.document.write('<td></td>');
+                }
+            } 
+            win.document.write('</tr>');
+            win.document.write('</tbody>');    
+            win.document.write('</table>');      
+            // THE TABLE CONTENTS INSIDE THE BODY TAG.
+            win.document.write('</body></html>');
+            //win.document.close();
+            win.focus();
+            // win.print();    // PRINT THE CONTENTS.         
+            var element =  win.document.body.innerHTML;  
+            //alert(typeof element)
+            //alert(element.length)
+
+            demoFromHTML(element)
+            function demoFromHTML(invoiceData) {
+
+                var val = htmlToPdfmake(invoiceData);
+                var dd = {content:val};
+                pdfMake.createPdf(dd).open()
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:3000/route/api/medical/invoices',
+                    data: {
+                        file_name: `${custMobNumber}_${new Date().toJSON().slice(0,16)} `,
+                        cust_name: `${customerName}`,
+                        mob_number: `${Number(custMobNumber)}`,
+                        ref_doctor: `${refDoctorName}`,
+                        pdf_content: `${invoiceData}`
+                    },
+                    headers: {'Authorization': 'Bearer ...'}
+                });         
+                pdfMake.createPdf(dd).download(`${custMobNumber}_${new Date().toJSON().slice(0,16)}`)   
+            }
+            win.close();        
+        }
+    </script>
+<%- include('footer') -%>

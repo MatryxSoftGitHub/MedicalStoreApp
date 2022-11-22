@@ -1,0 +1,81 @@
+<%- include('header') -%>
+<%- include('dashboard') -%>
+    <div class="top new-stock-container">
+        <h4>Add New Customer</h4>
+        <form method="POST" action="/route/api/medical/customers">
+            <div class="add-stock-container">
+                <div class="form-inline">
+                    <b for="customer_name">Customer Name:</b>
+                    <input type="text" id="customer_name" name="customer_name" class="form-control" spellcheck="false" autocomplete="off" pattern="[a-zA-Z\s]{0,20}" oninvalid="InvalidCustomerName(this);" oninput="InvalidCustomerName(this);" required="required">
+                    <b for="customer_mobile_number">Mobile Number:</b>
+                    <input type="text" id="customer_mobile_number" name="customer_mobile_number" class="form-control" spellcheck="false" autocomplete="off" pattern="[0-9]{10}" oninvalid="InvalidCustomerMobileNumber(this);" oninput="InvalidCustomerMobileNumber(this);" required="required">
+                </div>
+                <div class="form-inline">
+                    <b for="reference_doctor">Reference Doctor</b>
+                    <input type="text" id="reference_doctor" name="reference_doctor" class="form-control" spellcheck="false" autocomplete="off" pattern="[a-zA-Z\s]{0,20}" oninvalid="InvalidReferenceDoctor(this);" oninput="InvalidReferenceDoctor(this);" required="required">
+                    <b for="customer_type">Customer Type:</b>
+                    <input type="text" id="customer_type" name="customer_type" list="customerTypeList" class="form-control" spellcheck="false" autocomplete="off" pattern="[a-zA-Z\s]{0,20}" oninvalid="InvalidNewOrExist(this);" oninput="InvalidNewOrExist(this);" required="required">
+                    <datalist id="customerTypeList">
+                        <option value="New">New</option>
+                        <option value="Existing">Existing</option>
+                    </datalist>
+                </div>
+                <div class="form-inline">
+                    <button type="submit" class="btn btn-success rounded-pill">Add Customer</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        function InvalidCustomerName(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Customer Name.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Customer Name within 20 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+        function InvalidCustomerMobileNumber(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Customer Mobile Number.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid 10 digit Customer Mobile Number.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+        function InvalidReferenceDoctor(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Reference Doctor Name.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Reference Doctor Name within 20 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+        function InvalidSupplierConatctPersonName(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Supplier Contact Person Name.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Supplier Contact Person Name within 20 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+        function InvalidNewOrExist(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Customer Type.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Customer Type within 20 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+    </script>
+<%- include('footer') -%>

@@ -1,0 +1,81 @@
+<%- include('header') -%>
+<%- include('dashboard') -%>
+    <div class="top new-stock-container">
+        <h4>Add New User</h4>
+        <form method="POST" action="/route/api/medical/users">
+            <div class="add-stock-container">
+                <div class="form-inline">
+                    <b for="name">Name:</b>
+                    <input type="text" id="name" name="name" class="form-control" spellcheck="false" autocomplete="off" pattern="[a-zA-Z\s]{0,20}" oninvalid="InvalidName(this);" oninput="InvalidName(this);" required="required">
+                    <b for="role">Role:</b>
+                    <input type="text" id="role" name="role" class="form-control" spellcheck="false" autocomplete="off" pattern="[a-zA-Z\s]{0,10}" oninvalid="InvalidRole(this);" oninput="InvalidRole(this);" required="required">
+                </div>
+                <div class="form-inline">
+                    <b for="user_name">User Name:</b>
+                    <input type="text" id="user_name" name="user_name" class="form-control" spellcheck="false" autocomplete="off" pattern=".{0,20}" oninvalid="InvalidUserName(this);" oninput="InvalidUserName(this);" required="required">
+                    <b for="password">Password:</b>
+                    <input type="password" id="password" name="password" class="form-control" spellcheck="false" autocomplete="off" pattern=".{0,20}" oninvalid="InvalidPassword(this);" oninput="InvalidPassword(this);" required="required">
+                </div> 
+                <div class="form-inline">
+                    <b for="email">Email:</b>
+                    <input type="email" id="email" name="email" class="form-control" spellcheck="false" autocomplete="off" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" oninvalid="InvalidEmail(this);" oninput="InvalidEmail(this);" required="required">
+                </div>     
+                <div class="form-inline">
+                    <button type="submit" class="btn btn-success rounded-pill">Add User</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        function InvalidName(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Name.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Name within 20 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        } 
+        function InvalidRole(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Role.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Role within 10 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        } 
+        function InvalidUserName(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Username.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Username within 20 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        } 
+        function InvalidPassword(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Password.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Password within 20 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        } 
+        function InvalidEmail(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Email.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Email.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        } 
+    </script>
+<%- include('footer') -%>

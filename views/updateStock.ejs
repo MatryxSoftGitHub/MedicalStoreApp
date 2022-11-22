@@ -1,0 +1,117 @@
+<%- include('header') -%>
+<%- include('dashboard') -%>
+    <div class="top stock-container">      
+        <h4>Update Stock</h4>
+        <div id="checkboxes" data-type = "horizontal">
+          <label for="red">Red:</label>
+          <input type="checkbox" class="color" id="red" name="red" value="red" onchange="colorCheckboxFunction(this)">
+          <label for="yellow">Yellow:</label>
+          <input type="checkbox" class="color" id="yellow" name="yellow" value="yellow" onchange="colorCheckboxFunction(this)">
+          <label for="none">None:</label>
+          <input type="checkbox" class="color" id="none" name="none" value="none" onchange="colorCheckboxFunction(this)" checked>          
+          <button type="submit" id="btnDelete" class="btn btn-success rounded-pill" style="display: none;">Delete</button>
+        </div>          
+        <form method="#" action="#">
+            <div class="stock-detail-container">
+                <table class="table" id="stockUpdateTable">
+                    <thead class="thead">
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Item Description</th>
+                            <th>Manufacturer Name</th>
+                            <th>Type</th>
+                            <th>Unit Price</th>
+                            <th>Quantity</th>                            
+                            <th>Supplier Name</th>
+                            <th>Location</th>
+                            <th>Purchase Date</th>
+                            <th>Expiry Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody" id="stockUpdateTbody">
+                        <%- include('showStockDetails') -%>
+                    </tbody>
+                </table>                
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="http://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+
+      $("#stockUpdateTable").dataTable();
+
+      function colorCheckboxFunction(element){
+        let color
+        if(element.checked){
+          var checkboxes = document.getElementsByClassName('color');
+          for(var i=0;i<checkboxes.length;i++){
+            if(checkboxes[i]!=element){
+              checkboxes[i].checked = false;
+            }else{
+              color = element.name
+            }              
+          }
+          if(color=="red"){
+            document.getElementById("btnDelete").style.display = "";
+          }else{
+            document.getElementById("btnDelete").style.display = "none";
+          }
+        }
+        if(color==="red"){
+          table = document.getElementById("stockUpdateTable");
+          tr = table.getElementsByTagName("tr");
+          for (i = 0; i < tr.length; i++) {
+            if(tr[i].style.backgroundColor == "red"){
+              tr[i].style.display = "";
+            }
+            else{
+              tr[i].style.display = "none";      
+            }      
+          }
+        }else if(color==="yellow"){
+          table = document.getElementById("stockUpdateTable");
+          tr = table.getElementsByTagName("tr");
+          for (i = 0; i < tr.length; i++) {
+            if(tr[i].style.backgroundColor == "yellow"){
+              tr[i].style.display = "";
+            }
+            else{
+              tr[i].style.display = "none";      
+            }          
+          }
+        }else{
+          table = document.getElementById("stockUpdateTable");
+          tr = table.getElementsByTagName("tr");
+          for (i = 0; i < tr.length; i++) {
+            tr[i].style.display = "";            
+          }
+        }
+      }
+
+      function warningAndExpiryColor() {
+        var rowCount = document.getElementById("stockUpdateTbody").rows.length;
+        var table = document.getElementById("stockUpdateTbody");
+        for(var i=0;i<rowCount;i++){
+          var Row=table.rows[i];
+          var Cells = Row.getElementsByTagName("td");
+          var expiryDate = new Date(Cells[9].innerText);
+          var exp = "28/"+expiryDate.toLocaleString('default', { month: '2-digit', year: 'numeric' })
+          var currentDate= new Date();
+          var difference = expiryDate.getTime()-currentDate.getTime();
+          var dayDiff= difference/(1000*60*60*24);
+          if(dayDiff<=30){
+            table.rows[i].style.backgroundColor = "red"; 
+            //table.deleteRow(Row);
+            //table.rows[Row].remove(); 
+          }else if(dayDiff<90 && dayDiff>30 ){
+            table.rows[i].style.backgroundColor = "yellow";
+          }else{
+          //Do nothing
+          }
+        }
+      }
+      window.onload = warningAndExpiryColor();      
+    </script>
+<%- include('footer') -%>

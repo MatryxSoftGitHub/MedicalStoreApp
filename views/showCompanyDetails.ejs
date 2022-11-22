@@ -1,0 +1,13 @@
+<% for(var i=0; i<companyDetails.length; i++) { %>
+<tr>
+    <td><%= companyDetails[i].manufacturer_name %></td>
+    <td><%= companyDetails[i].supplier_name %></td>
+    <td><%= companyDetails[i].supplier_address %></td>
+    <td><%= companyDetails[i].supplier_contact_person_name %></td>
+    <td><%= companyDetails[i].supplier_mobile_number %></td>
+    <td>
+        <a href="<%= `/route/api/medical/companies/${companyDetails[i]._id}/edit` %>" type="button" class="btn btn-success" style="margin-bottom: 25px;">Edit</a>
+        <a href="<%= `/route/api/medical/companies/${companyDetails[i]._id}?_method=DELETE` %>" type="button" class="btn btn-success"  onclick="return confirm('Are you sure you want to delete this record?')">Delete</a>
+    </td>
+</tr>
+<% } %>

@@ -1,0 +1,81 @@
+<%- include('header') -%>
+<%- include('dashboard') -%>
+    <div class="top new-stock-container">
+        <h4>Update Company Details</h4>
+        <form method="POST" id="update_company" action="<%=`/route/api/medical/companies/${updateCompany._id}/update?_method=PUT`%>">
+            <div class="add-stock-container">
+                <div class="form-inline">
+                    <b for="manufacturer_name">Manufacturer Name:</b>
+                    <input type="text" id="manufacturer_name" name="manufacturer_name" value="<%= updateCompany.manufacturer_name%>" class="form-control" spellcheck="false" autocomplete="off" pattern=".{0,100}" oninvalid="InvalidManufacturerName(this);" oninput="InvalidManufacturerName(this);" required="required">
+                    <b for="supplier_name">Supplier Name:</b>
+                    <input type="text" id="supplier_name" name="supplier_name" value="<%= updateCompany.supplier_name%>" class="form-control" spellcheck="false" autocomplete="off" pattern=".{0,100}" oninvalid="InvalidSupplierName(this);" oninput="InvalidSupplierName(this);" required="required">
+                </div>
+                <div class="form-inline">
+                    <b for="supplier_address">Supplier Address:</b>
+                    <input type="text" id="supplier_address" name="supplier_address" value="<%= updateCompany.supplier_address%>" class="form-control" spellcheck="false" autocomplete="off" pattern=".{0,100}" oninvalid="InvalidSupplierAddress(this);" oninput="InvalidSupplierAddress(this);" required="required">
+                    <b for="supplier_contact_person_name">Supplier Contact Person Name:</b>
+                    <input type="text" id="supplier_contact_person_name" name="supplier_contact_person_name" value="<%= updateCompany.supplier_contact_person_name%>" class="form-control" spellcheck="false" autocomplete="off" pattern="[a-zA-Z\s]{0,20}" oninvalid="InvalidSupplierConatctPersonName(this);" oninput="InvalidSupplierConatctPersonName(this);" required="required">
+                </div>
+                <div class="form-inline">
+                    <b for="supplier_mobile_number">Mobile Number:</b>
+                    <input type="text" id="supplier_mobile_number" name="supplier_mobile_number" value="<%= updateCompany.supplier_mobile_number%>" class="form-control" spellcheck="false" autocomplete="off" pattern="[0-9]{10}" oninvalid="InvalidSupplierMobileNumber(this);" oninput="InvalidSupplierMobileNumber(this);" required="required">
+                </div>                
+                <div class="form-inline">
+                    <button type="submit" class="btn btn-success rounded-pill">Update Company</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        function InvalidManufacturerName(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Manufacturer Name.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Manufacturer Name within 100 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+        function InvalidSupplierName(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Supplier Name.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Supplier Name within 100 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+        function InvalidSupplierAddress(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Supplier Address.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Supplier Address within 100 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+        function InvalidSupplierConatctPersonName(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Supplier Contact Person Name.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Supplier Contact Person Name within 20 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+        function InvalidSupplierMobileNumber(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Supplier Mobile Number.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid 10 digit Supplier Mobile Number.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+    </script>
+<%- include('footer') -%> 

@@ -1,0 +1,20 @@
+<% for(var i=0; i<stockDetails.length; i++) { %>
+<% var purchaseDate = new Date(stockDetails[i].purchase_date.split("T")[0]) %>
+<% var expiryDate = new Date(stockDetails[i].expiry_date.split("T")[0]) %>
+<tr>
+    <td><%= stockDetails[i].item_name %></td>
+    <td><%= stockDetails[i].item_detail %></td>
+    <td><%= stockDetails[i].manufacturer_name %></td>
+    <td><%= stockDetails[i].medicine_type %></td>
+    <td><%= stockDetails[i].unit_price %></td>
+    <td><%= stockDetails[i].quantity %></td>
+    <td><%= stockDetails[i].supplier_name %></td>
+    <td><%= stockDetails[i].location %></td>
+    <td><%= purchaseDate.toLocaleString('default', { month: 'short', year: 'numeric' }) %></td>
+    <td><%= expiryDate.toLocaleString('default', { month: 'short', year: 'numeric' }) %></td>
+    <td>
+        <a href="<%= `/route/api/medical/stocks/${stockDetails[i]._id}/edit` %>" type="button" class="btn btn-success" style="margin-bottom: 25px;">Edit</a> 
+        <a href="<%= `/route/api/medical/stocks/${stockDetails[i]._id}?_method=DELETE` %>" type="button" class="btn btn-success"  onclick="return confirm('Are you sure you want to delete this record?')">Delete</a>
+    </td>
+</tr>
+<% } %>

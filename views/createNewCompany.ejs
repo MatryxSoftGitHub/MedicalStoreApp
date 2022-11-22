@@ -1,0 +1,81 @@
+<%- include('header') -%>
+<%- include('dashboard') -%>
+    <div class="top new-stock-container">
+        <h4>Add Company</h4>
+        <form method="POST" action="/route/api/medical/companies">
+            <div class="add-stock-container">
+                <div class="form-inline">
+                    <b for="manufacturer_name">Manufacturer Name:</b>
+                    <input type="text" id="manufacturer_name" name="manufacturer_name" class="form-control" spellcheck="false" autocomplete="off" pattern="[a-zA-Z!@#$%^&*''-\/,.~\s]{0,50}" oninvalid="InvalidManufacturerName(this);" oninput="InvalidManufacturerName(this);" required="required">
+                    <b for="supplier_name">Distributor Company Name:</b>
+                    <input type="text" id="supplier_name" name="supplier_name" class="form-control" spellcheck="false" autocomplete="off" pattern="[a-zA-Z!@#$%^&*''-\/,.~\s]{0,50}" oninvalid="InvalidSupplierName(this);" oninput="InvalidSupplierName(this);" required="required">
+                </div>
+                <div class="form-inline">
+                    <b for="supplier_address">Distributor Address:</b>
+                    <input type="text" id="supplier_address" name="supplier_address" class="form-control" spellcheck="false" autocomplete="off" pattern=".{0,300}" oninvalid="InvalidSupplierAddress(this);" oninput="InvalidSupplierAddress(this);" required="required">
+                    <b for="supplier_contact_person_name">Distributor Contact Name:</b>
+                    <input type="text" id="supplier_contact_person_name" name="supplier_contact_person_name" class="form-control" spellcheck="false" autocomplete="off" pattern="[a-zA-Z\s]{0,20}" oninvalid="InvalidSupplierConatctPersonName(this);" oninput="InvalidSupplierConatctPersonName(this);" required="required">
+                </div>
+                <div class="form-inline">
+                    <b for="supplier_mobile_number">Distributor Mobile Number:</b>
+                    <input type="text" id="supplier_mobile_number" name="supplier_mobile_number" class="form-control" spellcheck="false" autocomplete="off" pattern="[0-9]{10}" oninvalid="InvalidSupplierMobileNumber(this);" oninput="InvalidSupplierMobileNumber(this);" required="required">
+                </div>                
+                <div class="form-inline">
+                    <button type="submit" class="btn btn-success rounded-pill">Add Company</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        function InvalidManufacturerName(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Manufacturer Name.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Manufacturer Name within 50 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+        function InvalidSupplierName(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Supplier Name.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Supplier Name within 50 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+        function InvalidSupplierAddress(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Supplier Address.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Supplier Address within 300 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+        function InvalidSupplierConatctPersonName(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Supplier Contact Person Name.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid Supplier Contact Person Name within 20 characters.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+        function InvalidSupplierMobileNumber(textbox) {
+            if (textbox.value === '') {
+                textbox.setCustomValidity('Please enter the Supplier Mobile Number.');
+            }else if (textbox.validity.patternMismatch) {
+                textbox.setCustomValidity('Please enter the valid 10 digit Supplier Mobile Number.');
+            }else{
+                textbox.setCustomValidity('');
+            }
+            return true;
+        }
+    </script>
+<%- include('footer') -%>
